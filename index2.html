@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A-Frame AR - Marker Hiro</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    >
+      <!-- Define o marcador Hiro -->
+      <a-marker preset="hiro">
+        <!-- Agrupando os objetos -->
+        <a-entity id="objects">
+          <!-- Cubo 1 com texto oculto inicialmente -->
+          <a-box
+            position="-0.5 0 0"
+            color="#4CC3D9"
+            scale="0.5 0.5 0.5"
+            class="hoverable"
+          >
+            <a-text
+              value="Eu cliquei"
+              position="0 0.6 0"
+              rotation="0 0 0"
+              align="center"
+              width="1.5"
+              color="#FFFFFF"
+              visible="false"
+              class="hover-text"
+            ></a-text>
+          </a-box>
+
+          <!-- Cubo 2 com texto oculto inicialmente -->
+          <a-box
+            position="0.5 0 0"
+            color="#FFC65D"
+            scale="0.5 0.5 0.5"
+            class="hoverable"
+          >
+            <a-text
+              value="Eu cliquei"
+              position="0 0.6 0"
+              rotation="0 0 0"
+              align="center"
+              width="1.5"
+              color="#FFFFFF"
+              visible="false"
+              class="hover-text"
+            ></a-text>
+          </a-box>
+
+          <!-- Cubo 3 com texto oculto inicialmente -->
+          <a-box
+            position="1.5 0 0"
+            color="#FF6347"
+            scale="0.5 0.5 0.5"
+            class="hoverable"
+          >
+            <a-text
+              value="Eu cliquei"
+              position="0 0.6 0"
+              rotation="0 0 0"
+              align="center"
+              width="1.5"
+              color="#FFFFFF"
+              visible="false"
+              class="hover-text"
+            ></a-text>
+          </a-box>
+
+          <!-- Cubo 4 com texto oculto inicialmente -->
+          <a-box
+            position="-0.5 -1 0"
+            color="#7BC8A4"
+            scale="0.5 0.5 0.5"
+            class="hoverable"
+          >
+            <a-text
+              value="Eu cliquei"
+              position="0 0.6 0"
+              rotation="0 0 0"
+              align="center"
+              width="1.5"
+              color="#FFFFFF"
+              visible="false"
+              class="hover-text"
+            ></a-text>
+          </a-box>
+
+          <!-- Cubo 5 com texto oculto inicialmente -->
+          <a-box
+            position="0.5 -1 0"
+            color="#FFD700"
+            scale="0.5 0.5 0.5"
+            class="hoverable"
+          >
+            <a-text
+              value="Eu cliquei"
+              position="0 0.6 0"
+              rotation="0 0 0"
+              align="center"
+              width="1.5"
+              color="#FFFFFF"
+              visible="false"
+              class="hover-text"
+            ></a-text>
+          </a-box>
+
+          <!-- Cubo 6 com texto oculto inicialmente -->
+          <a-box
+            position="1.5 -1 0"
+            color="#DA70D6"
+            scale="0.5 0.5 0.5"
+            class="hoverable"
+          >
+            <a-text
+              value="Eu cliquei"
+              position="0 0.6 0"
+              rotation="0 0 0"
+              align="center"
+              width="1.5"
+              color="#FFFFFF"
+              visible="false"
+              class="hover-text"
+            ></a-text>
+          </a-box>
+        </a-entity>
+      </a-marker>
+
+      <!-- Camera AR.js com cursor invisível -->
+      <a-entity camera>
+        <a-cursor id="cursor" raycaster="objects: .hoverable" material="color: transparent; opacity: 0"></a-cursor>
+      </a-entity>
+    </a-scene>
+
+    <button id="showObjectsBtn" style="position: absolute; top: 10px; left: 10px; z-index: 1;">
+      Mostrar Objetos
+    </button>
+
+    <script>
+      const objectsEntity = document.getElementById('objects');
+      const showObjectsBtn = document.getElementById('showObjectsBtn');
+
+      // Exibir objetos ao clicar no botão
+      showObjectsBtn.addEventListener('click', () => {
+        objectsEntity.setAttribute('visible', true);
+      });
+
+      // Define a visibilidade inicial dos objetos como false
+      objectsEntity.setAttribute('visible', false);
+
+      // Evento de foco e desfoco para os cubos
+      document.querySelectorAll('.hoverable').forEach((box) => {
+        box.addEventListener('mouseenter', () => {
+          const hoverText = box.querySelector('.hover-text');
+          hoverText.setAttribute('visible', true);
+        });
+
+        box.addEventListener('mouseleave', () => {
+          const hoverText = box.querySelector('.hover-text');
+          hoverText.setAttribute('visible', false);
+        });
+      });
+    </script>
+  </body>
+</html>

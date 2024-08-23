@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Tracking with MediaPipe Hands</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            background-color: transparent;
+        }
+
+        video, canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        canvas {
+            z-index: 2;
+            pointer-events: none;
+            background-color: transparent; /* Canvas transparente */
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // Ajustar o tamanho do canvas para corresponder ao vídeo
+        function adjustCanvasSize() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+        }
+
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
+        });
+
+        hands.setOptions({
+            maxNumHands: 2,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+        });
+
+        hands.onResults(onResults);
+
+        const camera = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 1280,
+            height: 720,
+        });
+
+        camera.start();
+
+        function onResults(results) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (results.multiHandLandmarks) {
+                for (const landmarks of results.multiHandLandmarks) {
+                    context.strokeStyle = 'red';
+                    context.lineWidth = 2;
+
+                    // Desenhar o contorno da mão conectando os pontos das landmarks
+                    for (let i = 0; i < landmarks.length; i++) {
+                        const x = landmarks[i].x * canvas.width;
+                        const y = landmarks[i].y * canvas.height;
+
+                        // Desenhar círculo no centro da palma da mão (landmark 0)
+                        if (i === 0) {
+                            context.beginPath();
+                            context.arc(x, y, 10, 0, 2 * Math.PI);
+                            context.stroke();
+                        }
+
+                        // Desenhar linhas entre os pontos das landmarks para formar o contorno da mão
+                        if (i > 0) {
+                            const prevX = landmarks[i - 1].x * canvas.width;
+                            const prevY = landmarks[i - 1].y * canvas.height;
+                            context.beginPath();
+                            context.moveTo(prevX, prevY);
+                            context.lineTo(x, y);
+                            context.stroke();
+                        }
+                    }
+
+                    // Fechar o contorno do dedo
+                    const lastX = landmarks[landmarks.length - 1].x * canvas.width;
+                    const lastY = landmarks[landmarks.length - 1].y * canvas.height;
+                    const firstX = landmarks[0].x * canvas.width;
+                    const firstY = landmarks[0].y * canvas.height;
+                    context.beginPath();
+                    context.moveTo(lastX, lastY);
+                    context.lineTo(firstX, firstY);
+                    context.stroke();
+                }
+            }
+        }
+
+        // Ajustar tamanho do canvas quando o vídeo carregar
+        video.addEventListener('loadeddata', adjustCanvasSize);
+    </script>
+</body>
+</html>
