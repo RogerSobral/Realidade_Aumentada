@@ -1,0 +1,130 @@
+/* Fonte e layout básico */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    height: 100%;
+    background-color: #000;
+}
+
+/* Estilos do header */
+header {
+    position: relative;
+    z-index: 10;
+}
+
+nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Estilos para o menu hamburguer */
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+    position: absolute;
+    right: 20px;
+    top: 25px;
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+        flex-direction: column;
+        text-align: left;
+        background-color: rgba(0, 0, 0, 0.9);
+        padding: 10px;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    nav ul.show-menu {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+/* Estilos dos cards de personagens */
+.character-selection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 50px;
+    gap: 20px;
+}
+
+.character-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    width: 200px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.character-card:hover {
+    transform: scale(1.1);
+}
+
+.character-card img {
+    width: 100%;
+    border-bottom: 1px solid #fff;
+}
+
+.character-card p {
+    color: #fff;
+    margin: 10px 0;
+}
+
+/* Animação para crescimento do card ao clicar */
+.character-card.active {
+    animation: grow 0.5s forwards;
+}
+
+@keyframes grow {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.3);
+    }
+}
+
+/* Estilos da imagem de fundo */
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../assets/fundoJogo.svg') no-repeat center center/cover;
+    z-index: 1;
+    filter: blur(5px) brightness(0.5);
+}
